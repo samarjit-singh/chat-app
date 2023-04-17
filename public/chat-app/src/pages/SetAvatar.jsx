@@ -24,7 +24,30 @@ const SetAvatar = () => {
     theme: "dark",
   };
 
-  const setProfilePicture = async () => {};
+  useEffect(() => {
+    if (!localStorage.getItem("chat-app-user")) {
+      navigate("/login");
+    }
+  }, []);
+
+  const setProfilePicture = async () => {
+    if (selectedAvatar === undefined) {
+      toast.error("Please select an avatar", toastOptions);
+    } else {
+      const user = await JSON.parse(localStorage.getItem("chat-app-user"));
+      const { data } = await axios.post(`${setAvatarRoute}/${user._id}`, {
+        image: avatars[selectedAvatar],
+      });
+      if (data.isSet) {
+        user.isAvatarImageSet = true;
+        user.avatarImage = data.image;
+        localStorage.setItem("chat-app-user", JSON.stringify(user));
+        navigate("/");
+      } else {
+        toast.error("Error setting avatar. Please try again", toastOptions);
+      }
+    }
+  };
 
   // const getAvatars = async () => {
   //   const data = [];
@@ -46,6 +69,8 @@ const SetAvatar = () => {
   //   };
   //   fetchData();
   // }, []);
+
+  // https://api.dicebear.com/6.x/pixel-art/svg?seed=Bunty-
 
   useEffect(() => {
     async function fetchData() {
@@ -78,30 +103,39 @@ const SetAvatar = () => {
 
   return (
     <>
-      <Container>
-        <div className="title-container">
-          <h1>Pick an avatar as your profile picture</h1>
-        </div>
-        <div className="avatars">
-          {avatars.map((avatar, index) => {
-            return (
-              <div
-                className={`avatar ${
-                  selectedAvatar === index ? "selected" : ""
-                }`}
-              >
-                <img
-                  src={avatar}
-                  alt="avatar"
-                  key={index}
-                  onClick={() => setSelectedAvatar(index)}
-                />
-              </div>
-            );
-          })}
-        </div>
-      </Container>
-      <ToastContainer />
+      {isLoading ? (
+        <Container>
+          <img src={loader} alt="loader" className="loader" />
+        </Container>
+      ) : (
+        <Container>
+          <div className="title-container">
+            <h1>Pick an avatar</h1>
+          </div>
+          <div className="avatars">
+            {avatars.map((avatar, index) => {
+              return (
+                <div
+                  className={`avatar ${
+                    selectedAvatar === index ? "selected" : ""
+                  }`}
+                >
+                  <img
+                    src={avatar}
+                    alt="avatar"
+                    key={index}
+                    onClick={() => setSelectedAvatar(index)}
+                  />
+                </div>
+              );
+            })}
+          </div>
+          <button className="submit-btn" onClick={setProfilePicture}>
+            Set as Profile Picture
+          </button>
+          <ToastContainer />
+        </Container>
+      )}
     </>
   );
 };
@@ -112,6 +146,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   gap: 3rem;
+  overflow: hidden;
   background-color: #131324;
   height: 100vh;
   width: 100vw;
@@ -125,6 +160,10 @@ const Container = styled.div`
   }
   .avatars {
     display: flex;
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 0rem;
+    }
     gap: 2rem;
     .avatar {
       border: 0.4rem solid transparent;
@@ -147,6 +186,9 @@ const Container = styled.div`
     background-color: #4e0eff;
     color: white;
     padding: 1rem 2rem;
+    @media (max-width: 768px) {
+      padding: 0.5rem 2rem;
+    }
     border: none;
     font-weight: bold;
     cursor: pointer;

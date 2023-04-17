@@ -38,11 +38,12 @@ const Login = () => {
         username,
         password,
       });
+      console.log(data);
       if (data.status === false) {
         toast.error(data.msg, toastOptions);
       }
       if (data.status === true) {
-        localStorage.setItem("chat-app-user", JSON.stringify(data.user));
+        localStorage.setItem("chat-app-user", JSON.stringify(data.userName));
         navigate("/");
       }
     }
