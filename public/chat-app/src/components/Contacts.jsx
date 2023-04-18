@@ -2,21 +2,22 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Logo from "../assets/logo.svg";
 
-const Contacts = ({ contacts, currentUser }) => {
+const Contacts = ({ contacts, currentUser, changeChat }) => {
   const [currentUserName, setCurrentUserName] = useState(undefined);
   const [currentUserImage, setCurrentUserImage] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
 
   useEffect(() => {
-    // console.log(contacts);
     if (currentUser) {
       setCurrentUserImage(currentUser.avatarImage);
       setCurrentUserName(currentUser.username);
-      console.log(currentUserName, " hello ", currentUserImage);
     }
   }, [currentUser]);
 
-  const changeCurrentChat = (index, contact) => {};
+  const changeCurrentChat = (index, contact) => {
+    setCurrentSelected(index);
+    changeChat(contacts);
+  };
 
   return (
     <>
@@ -33,7 +34,8 @@ const Contacts = ({ contacts, currentUser }) => {
                   className={`contact ${
                     index === currentSelected ? "selected" : ""
                   }`}
-                  key={contact._id}
+                  key={index}
+                  onClick={() => changeCurrentChat(index, contact)}
                 >
                   <div className="avatar">
                     <img src={contact.avatarImage} alt="avatar" key={index} />
@@ -50,7 +52,7 @@ const Contacts = ({ contacts, currentUser }) => {
               <img src={currentUserImage} alt="avatar" />
             </div>
             <div className="username">
-              <h1>{currentUserName}</h1>
+              <h2>{currentUserName}</h2>
             </div>
           </div>
         </Container>

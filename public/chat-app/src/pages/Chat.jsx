@@ -10,6 +10,7 @@ const Chat = () => {
 
   const [contacts, setContacts] = useState([]);
   const [currentUser, setCurrentUser] = useState(undefined);
+  const [currentChat, setCurrentChat] = useState(undefined);
 
   useEffect(() => {
     if (!localStorage.getItem("chat-app-user")) {
@@ -27,9 +28,7 @@ const Chat = () => {
       if (currentUser.isAvatarImageSet) {
         const fetchAllUsers = async () => {
           const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-          // console.log("data from fetch all users " + data);
           setContacts(data.data);
-          // console.log(contacts);
         };
         fetchAllUsers();
       } else {
@@ -38,10 +37,18 @@ const Chat = () => {
     }
   }, [navigate, contacts, currentUser]);
 
+  const handleChatChange = (chat) => {
+    setCurrentChat(chat);
+  };
+
   return (
     <Container>
       <div className="container">
-        <Contacts contacts={contacts} currentUser={currentUser} />
+        <Contacts
+          contacts={contacts}
+          currentUser={currentUser}
+          changeChat={handleChatChange}
+        />
       </div>
     </Container>
   );
