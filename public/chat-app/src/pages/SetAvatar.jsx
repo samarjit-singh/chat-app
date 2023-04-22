@@ -6,7 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { setAvatarRoute } from "../utils/APIRoutes";
-import { Buffer } from "buffer";
+// import { Buffer } from "buffer";
 
 const SetAvatar = () => {
   const api = "https://api.multiavatar.com";
@@ -28,7 +28,7 @@ const SetAvatar = () => {
     if (!localStorage.getItem("chat-app-user")) {
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
   const setProfilePicture = async () => {
     if (selectedAvatar === undefined) {

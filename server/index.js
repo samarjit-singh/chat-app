@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-// const userRoutes = require("./routes");
 const userRoutes = require("./routes/userRoutes");
+const messageRoute = require("./routes/messagesRoute");
 const app = express();
 
 require("dotenv").config();
@@ -11,6 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", userRoutes);
+app.use("/api/messages", messageRoute);
 
 // useNewUrlParser and useUnifiedTopology are options used in Mongoose to improve the connection process between the Node.js application and the MongoDB database by using a new URL parser and a new engine for handling replica set and sharded cluster connections.
 mongoose
