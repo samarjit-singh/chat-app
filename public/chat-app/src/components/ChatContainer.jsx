@@ -4,9 +4,10 @@ import Logout from "./Logout";
 import ChatInput from "./Inputs";
 import Messages from "./Messages";
 
-
 const ChatContainer = ({ currentChat }) => {
-  const handleSendMsg = async (msg) => {};
+  const handleSendMsg = async (msg) => {
+    alert(msg);
+  };
 
   return (
     <>
